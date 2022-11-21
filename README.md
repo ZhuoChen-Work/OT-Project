@@ -1,1 +1,3 @@
-# OT-Project
+# Optimal-Transport
+
+# Usage
