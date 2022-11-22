@@ -9,7 +9,7 @@ ICNN(Input Convex Neural Network) is used to approximate this convex function.
 
 3)MLP-BarryCenter model: By computing the WasserStein Distance, we can know the ground truth optimal mapping between the training source and the training target. As one singe source point may be transported to multiple target points (s.t. the sum of the weights equal to one), the barycenter of these target points are choosed to be the reference points, which are used to compute the Mean Square Error.
 
-# Part of Result
+# Part of Results (Toy example)
 ICNN-CTransform on TwoMoon
 
 souce: blue points;
