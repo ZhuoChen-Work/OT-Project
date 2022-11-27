@@ -5,7 +5,9 @@ import torch
 
 class Gaussian_distribution():
   def __init__(self,mean,std,dim):
-    
+    """
+    Generate two Gaussian distribution 
+    """
     self.dim = dim
     self.mean = mean
     self.std = std
@@ -18,6 +20,9 @@ class Gaussian_distribution():
 
 class TwoMoon():
   def __init__(self,n_samples=1000,noise=0.05,ratio=0.2,random_state=0):
+    """
+    Generate two moons distribution
+    """
     X,y = datasets.make_moons(n_samples=1000,noise=0.05,random_state=random_state)
     X = StandardScaler().fit_transform(X)
 
@@ -36,6 +41,9 @@ class TwoMoon():
     self.target_test = self.target[int(0.4*len(self.target)):]
 
 def data_noise(x,std=0.15,seed=0,device='cuda:0'):
+  """
+  Add Gaussian noise into the data
+  """
   if type(x) != torch.Tensor:
     x = torch.Tensor(x) 
 
