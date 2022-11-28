@@ -9,24 +9,23 @@ device = torch.device('cuda:0') if torch.cuda.is_available() else 'cpu'
 
 
 class ICNN(nn.Module):
-  def __init__(self,input_dim, dim_hidden=[100,100,100], device=device):
-   """ 
-   Input convex neural network:  
-   w_zs and w_xs are the weights in ICNN model, where w_zs should be positive during the training
-   the number of units in each layer of ICNN is (input_dim, 1 ,dim_hidden[0],dim_hidden[1],...,dim_hidden[-1], 1 );  
-
-   the shapes of w_zs are (1,dim_hidden[0]),(dim_hidden[0],dim_hidden[1]),...,(dim_hidden[-2],dim_hidden[-1]),(dim_hidden[-1],1)   
-   bias = False
-   the initial weight of w_zs is 1/dim_hidden[i]
-   len(w_zs) = dim_hidden+1;    
-
-   the shapes of w_xs are (input_dim,input_dim),(input,dim_hidden[0]),...,(input_dim, dim_hidden[-1]),(inpit_dim,1)
-   bias = True
-   Initializing weight,bias with Gaussian  
-   len(w_xs) = dim_hidden+2.   
-   """
-    
+  def __init__(self,input_dim, dim_hidden=[100,100,100], device=device):    
     super(ICNN,self).__init__()
+    """ 
+    Input convex neural network:  
+    w_zs and w_xs are the weights in ICNN model, where w_zs should be positive during the training
+    the number of units in each layer of ICNN is (input_dim, 1 ,dim_hidden[0],dim_hidden[1],...,dim_hidden[-1], 1 );  
+
+    the shapes of w_zs are (1,dim_hidden[0]),(dim_hidden[0],dim_hidden[1]),...,(dim_hidden[-2],dim_hidden[-1]),(dim_hidden[-1],1)   
+    bias = False
+    the initial weight of w_zs is 1/dim_hidden[i]
+    len(w_zs) = dim_hidden+1;    
+
+    the shapes of w_xs are (input_dim,input_dim),(input,dim_hidden[0]),...,(input_dim, dim_hidden[-1]),(inpit_dim,1)
+    bias = True
+    Initializing weight,bias with Gaussian  
+    len(w_xs) = dim_hidden+2.   
+    """
     self.input_dim = input_dim
     self.num_hidden = len(dim_hidden)
     self.dim_hidden = dim_hidden
