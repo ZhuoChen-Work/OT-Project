@@ -75,25 +75,25 @@ class ICNN(nn.Module):
 
 class LSE(nn.Module):
   def __init__(self,input_dim,hid_dim=200,device=device,alpha=0.5):
-  """
-  Log Sum Exp 
-  """
+    """
+    Log Sum Exp 
+    """
     super(LSE, self).__init__()
     self.W = nn.Linear(input_dim,hid_dim,bias=True)
     self.alpha = alpha
     
   def forward(self,x):
-  """
-  The forward function consist of two parts: 1) the standard LSE function; 2) alpha*||x||^2
-  """
+    """
+    The forward function consist of two parts: 1) the standard LSE function; 2) alpha*||x||^2
+    """
   # try to make it quadratic
     out = torch.logsumexp(self.W(x),dim=-1)+torch.sum(self.alpha*(x**2),dim=-1)
     return out
 
   def transport(self,x):
-  """
-  According to Brenier theorem, the optimal transport mapping is the gradiant of the convex forward function
-  """
+    """
+    According to Brenier theorem, the optimal transport mapping is the gradiant of the convex forward function
+    """
     temp = torch.clone(x)
     temp.requires_grad_()
     loss=self.forward(temp)
@@ -102,41 +102,41 @@ class LSE(nn.Module):
 
 class c_transform(nn.Module):
   def __init__(self,train_target,convex_func):
-  """
-  C-transform 
-  https://arxiv.org/pdf/1910.03875.pdf,  formula(20),(21)
-  """
+    """
+    C-transform 
+    https://arxiv.org/pdf/1910.03875.pdf,  formula(20),(21)
+    """
     super(c_transform, self).__init__()
     self.target = train_target
     self.init_target = train_target
     self.convex_func = convex_func
     
   def phi_Brenier(self,x):  
-  """
-  phi_Brenier is a convex function
-  """
+    """
+    phi_Brenier is a convex function
+    """
     # size n 
     return self.convex_func(x).reshape(-1,1)
     
   def phi_Kantorovich(self,x):
-  """
-  phi_kantorovich = 0.5||x||^2 - phi_Brenier
-  """
+    """
+    phi_kantorovich = 0.5||x||^2 - phi_Brenier
+    """
     # size n x 1
     return 0.5*torch.sum(x**2,dim=-1).reshape(-1,1) - self.phi_Brenier(x) 
 
   def phi_c(self,x):
-  """
-  C-transform function of x
-  """
+    """
+    C-transform function of x
+    """
     DD = 0.5*torch.cdist(x,self.target)**2  # size n x m
     return torch.amin(DD - self.phi_Kantorovich(x).reshape(-1,1),dim=0) # size m
   
   def transport(self,x): 
-  """
-  According to Brenier theorem, the optimal transport mapping is the gradiant of the convex forward function
-  size = nxd
-  """
+    """
+    According to Brenier theorem, the optimal transport mapping is the gradiant of the convex forward function
+    size = nxd
+    """
     temp = torch.clone(x)
     temp.requires_grad_()
     loss=self.phi_Brenier(temp)
