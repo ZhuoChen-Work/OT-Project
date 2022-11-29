@@ -1,8 +1,9 @@
 
 from sklearn import datasets
+""" Author Zhuo Chen"""
+
 import matplotlib.pyplot as plt
 from sklearn.preprocessing import StandardScaler
-import sklearn.utils as utils
 import numpy as np
 import torch
 import torch.nn as nn
@@ -11,16 +12,17 @@ import torch.nn.functional as F
 from torch.nn.parameter import Parameter
 import imageio
 import os
+from keras.datasets import fashion_mnist
+from keras.datasets import mnist
+
+from sklearn.decomposition import PCA
+from sklearn import svm
 
 import ot
 import ot.plot
 
 import brenier
 import utils
-
-"""
-
-"""
 
 device = torch.device('cuda:0') if torch.cuda.is_available() else 'cpu'
 
@@ -40,7 +42,9 @@ def low_plot(source_train,target_train,result,ep):
   plt.close()
 
 def high_plot(result,ep):
-
+  """
+  plot MNIST result
+  """
 
   plt.figure(figsize=(15, 15))
   for i, comp in enumerate(result[0:50].cpu().detach().numpy()) :
@@ -55,6 +59,9 @@ def high_plot(result,ep):
 
 def noise_train(model_icnn,device, train_loader, optimizer, 
                 epoch,noise_bool=True,print_bool=True, high_plot_bool = False,alpha=0):
+    """
+    train the model with Gaussian noise
+    """
     model = model_icnn.to(device)
     for ep in range(epoch):
       for data in train_loader:
@@ -86,9 +93,6 @@ def noise_train(model_icnn,device, train_loader, optimizer,
               image = imageio.imread(f"epoch {ep}.png")
               writer.append_data(image)
               os.remove(f"epoch {ep}.png")
-
-from keras.datasets import fashion_mnist
-from keras.datasets import mnist
 
 (x_train, y_train), (x_test, y_test) = mnist.load_data()
 #(x_train, y_train), (x_test, y_test) = fashion_mnist.load_data()
@@ -146,10 +150,12 @@ for i, comp in enumerate(fake_target[:50]) :
 plt.suptitle('test results after projecting on convex hull',y=0.9,fontsize=16)
 plt.savefig('test results.pdf',bbox_inches="tight")
 
-from sklearn.decomposition import PCA
-from sklearn import svm
+
 
 def find_projection(source, target):
+  """
+  project the point on the convex hull of the target distribution
+  """
 
   A = np.concatenate([source.reshape(1,-1),target])
   L = np.ones(A.shape[0])
