@@ -1,7 +1,4 @@
-
 from sklearn import datasets
-""" Author Zhuo Chen"""
-
 import matplotlib.pyplot as plt
 from sklearn.preprocessing import StandardScaler
 import numpy as np

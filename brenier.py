@@ -1,5 +1,3 @@
-""" Author Zhuo Chen"""
-
 import torch
 import torch.nn as nn
 import ot
